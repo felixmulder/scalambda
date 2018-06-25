@@ -1,3 +1,8 @@
+lazy val lambda =
+  project
+    .in(file("."))
+    .aggregate(`lambda-core`, `lambda-swaggy`)
+
 lazy val `lambda-core` =
   project
     .in(file("./modules/core"))
@@ -44,12 +49,13 @@ lazy val `lambda-swaggy` =
     )
     .settings(
       libraryDependencies ++= {
+        val catsEffectVersion    = "1.0.0-RC2"
         val minitestVersion      = "2.1.1"
-        val swaggerCoreVersion   = "2.0.2"
 
         Seq(
           // Project dependencies:
-          "io.swagger.core.v3" % "swagger-core" % swaggerCoreVersion,
+          "io.swagger.parser.v3" % "swagger-parser" % "2.0.1",
+          "org.typelevel" %% "cats-effect"          % catsEffectVersion,
 
           // Test dependencies:
           "io.monix" %% "minitest" % minitestVersion % "test",
@@ -57,6 +63,35 @@ lazy val `lambda-swaggy` =
       },
       // Enable minitest:
       testFrameworks += new TestFramework("minitest.runner.Framework"),
+    )
+
+lazy val `lambda-generated` =
+  project
+    .in(file("./modules/generated"))
+    .settings(
+      projectLayout ++
+      compilerOptions ++
+      compilerPlugins ++
+      Nil
+    )
+    .settings(
+      libraryDependencies ++= {
+        val catsEffectVersion    = "1.0.0-RC2"
+        val circeVersion         = "0.10.0-M1"
+        val minitestVersion      = "2.1.1"
+        val awsLambdaCoreVersion = "1.2.0"
+
+        Seq(
+          // Project dependencies:
+          "org.typelevel" %% "cats-effect"          % catsEffectVersion,
+          "io.circe"      %% "circe-jawn"           % circeVersion,
+          "io.circe"      %% "circe-parser"         % circeVersion,
+          "io.circe"      %% "circe-generic"        % circeVersion,
+          "io.circe"      %% "circe-generic-extras" % circeVersion,
+          "io.circe"      %% "circe-java8"          % circeVersion,
+          "com.amazonaws" % "aws-lambda-java-core"  % awsLambdaCoreVersion,
+        )
+      },
     )
 
 lazy val projectLayout = Seq(
