@@ -52,8 +52,10 @@ lazy val `lambda-swaggy` =
         val catsEffectVersion    = "1.0.0-RC2"
         val minitestVersion      = "2.1.1"
 
+
         Seq(
           // Project dependencies:
+          "org.scalameta" %% "scalameta" % "3.7.4",
           "io.swagger.parser.v3" % "swagger-parser" % "2.0.1",
           "org.typelevel" %% "cats-effect"          % catsEffectVersion,
 
