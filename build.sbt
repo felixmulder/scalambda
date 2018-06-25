@@ -1,6 +1,6 @@
-lazy val root =
+lazy val `lambda-core` =
   project
-    .in(file("."))
+    .in(file("./modules/core"))
     .settings(
       projectLayout ++
       compilerOptions ++
@@ -24,6 +24,32 @@ lazy val root =
           "io.circe"      %% "circe-java8"          % circeVersion,
           "com.amazonaws" % "aws-lambda-java-core"  % awsLambdaCoreVersion,
 
+
+          // Test dependencies:
+          "io.monix" %% "minitest" % minitestVersion % "test",
+        )
+      },
+      // Enable minitest:
+      testFrameworks += new TestFramework("minitest.runner.Framework"),
+    )
+
+lazy val `lambda-swaggy` =
+  project
+    .in(file("./modules/swaggy"))
+    .settings(
+      projectLayout ++
+      compilerOptions ++
+      compilerPlugins ++
+      Nil
+    )
+    .settings(
+      libraryDependencies ++= {
+        val minitestVersion      = "2.1.1"
+        val swaggerCoreVersion   = "2.0.2"
+
+        Seq(
+          // Project dependencies:
+          "io.swagger.core.v3" % "swagger-core" % swaggerCoreVersion,
 
           // Test dependencies:
           "io.monix" %% "minitest" % minitestVersion % "test",

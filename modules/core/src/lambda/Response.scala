@@ -1,4 +1,4 @@
-package scalambda.lambda
+package lambda
 
 import io.circe.Encoder
 import io.circe.syntax._

@@ -1,4 +1,4 @@
-package scalambda.lambda
+package lambda
 
 import minitest._
 import cats.implicits._

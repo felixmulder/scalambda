@@ -1,4 +1,3 @@
-package scalambda
 package lambda
 
 import java.io.{InputStream, OutputStream, ByteArrayOutputStream}
@@ -47,9 +46,9 @@ abstract class JsonLambda[F[_]](implicit F: Effect[F])
 }
 
 object JsonLambda {
-  protected[scalambda] final val BufSiz =
+  protected[lambda] final val BufSiz =
     1024
 
-  protected[scalambda] final val parser: JawnParser =
+  protected[lambda] final val parser: JawnParser =
     new JawnParser
 }

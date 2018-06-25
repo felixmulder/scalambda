@@ -1,4 +1,3 @@
-package scalambda
 package lambda
 
 import cats.implicits._
