@@ -11,6 +11,7 @@ object Main extends IOApp {
       parsed  <- IO.fromEither(parseArgs(args))
       swagger <- readSwagger(parsed.inputPath)
       defs    <- IO(definitions(swagger, parsed.domainPackage))
+      _       <- IO(endpoints(swagger))
       _       <- writeScalaFiles(parsed.outputDir, defs)
     } yield ExitCode.Success
 
@@ -19,7 +20,6 @@ object Main extends IOApp {
     outputDir: String,
     domainPackage: List[String]
   )
-
   private def parseArgs(args: List[String]): Either[Exception, ParsedArgs] =
     args match {
       case inputFile :: outputDir :: pkg :: _ =>
