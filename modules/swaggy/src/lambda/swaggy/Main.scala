@@ -10,16 +10,17 @@ object Main extends IOApp {
     for {
       parsed  <- IO.fromEither(parseArgs(args))
       swagger <- readSwagger(parsed.inputPath)
-      defs    <- IO(definitions(swagger, parsed.domainPackage))
-      _       <- IO(endpoints(swagger))
+      defs    <- IO(definitions(swagger, parsed.pkg :+ "model"))
+      _       <- IO(paths(swagger, parsed.pkg :+ "paths"))
       _       <- writeScalaFiles(parsed.outputDir, defs)
     } yield ExitCode.Success
 
   private final case class ParsedArgs(
     inputPath: String,
     outputDir: String,
-    domainPackage: List[String]
+    pkg: List[String]
   )
+
   private def parseArgs(args: List[String]): Either[Exception, ParsedArgs] =
     args match {
       case inputFile :: outputDir :: pkg :: _ =>
