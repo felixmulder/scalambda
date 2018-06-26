@@ -27,4 +27,11 @@ object definitions {
     }
     .toList
 
+
+  private def printModel(m: Model): Unit = m match {
+    case m: RefModel =>
+      println(m.getProperties)
+      println(m.getSimpleRef)
+      println(m.getExample)
+  }
 }

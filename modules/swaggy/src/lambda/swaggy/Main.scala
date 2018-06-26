@@ -1,10 +1,5 @@
 package lambda.swaggy
 
-import io.swagger.parser.SwaggerParser
-import io.swagger.models._
-import io.swagger.models.parameters._
-import io.swagger.models.HttpMethod._
-
 import cats.implicits._
 import cats.effect.{IO, ExitCode, IOApp}
 
@@ -32,11 +27,4 @@ object Main extends IOApp {
       case otherwise =>
         new Exception(s"Needs three args, got: $otherwise").asLeft
     }
-
-  private def printModel(m: Model): Unit = m match {
-    case m: RefModel =>
-      println(m.getProperties)
-      println(m.getSimpleRef)
-      println(m.getExample)
-  }
 }
