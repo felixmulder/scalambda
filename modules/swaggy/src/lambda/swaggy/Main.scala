@@ -11,7 +11,7 @@ object Main extends IOApp {
       parsed  <- IO.fromEither(parseArgs(args))
       swagger <- readSwagger(parsed.inputPath)
       defs    <- IO(definitions(swagger, parsed.domainPackage))
-      _       <- defs.map(writeScalaFile(parsed.outputDir, _)).sequence
+      _       <- writeScalaFiles(parsed.outputDir, defs)
     } yield ExitCode.Success
 
   private final case class ParsedArgs(

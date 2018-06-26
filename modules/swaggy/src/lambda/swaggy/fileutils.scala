@@ -15,6 +15,9 @@ object fileutils {
   def writeScalaFile(outputDir: String, file: ScalaFile): IO[Unit] =
     writeFile((outputDir :: file.pkg).mkString("/"), file.title, file.contents)
 
+  def writeScalaFiles(outputDir: String, files: List[ScalaFile]): IO[Unit] =
+    files.map(writeScalaFile(outputDir, _)).sequence_
+
   def writeFile(outputDir: String, title: String, contents: Array[Byte]): IO[Unit] =
     IO.fromEither(
       Either.catchOnly[IOException] {
