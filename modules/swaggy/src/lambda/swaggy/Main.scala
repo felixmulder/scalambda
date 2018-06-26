@@ -33,7 +33,6 @@ object Main extends IOApp {
         new Exception(s"Needs three args, got: $otherwise").asLeft
     }
 
-
   private def printModel(m: Model): Unit = m match {
     case m: RefModel =>
       println(m.getProperties)
