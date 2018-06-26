@@ -11,11 +11,6 @@ import cats.effect.IO
 import scala.meta._
 
 object fileutils {
-  final case class ParsedArgs(
-    inputPath: String,
-    outputDir: String,
-    domainPackage: List[String]
-  )
 
   def writeScalaFile(outputDir: String, file: ScalaFile): IO[Unit] =
     writeFile((outputDir :: file.pkg).mkString("/"), file.title, file.contents)
