@@ -1,11 +1,12 @@
 package lambda.swaggy
 
+import org.scalafmt.Scalafmt.format
 import scala.meta._
 
 sealed trait ScalaFile {
   def pkg: List[String]
   def title: String
-  def contents: Array[Byte]
+  def contents: Either[Throwable, Array[Byte]]
 }
 
 final case class DomainType(
@@ -15,10 +16,13 @@ final case class DomainType(
   cls: Defn.Class, obj: Defn.Object
 ) extends ScalaFile {
   def contents =
-    q"""
-      package ${Term.Name(pkg.mkString("."))} {
-        ..${imports :+ cls :+ obj}
-      }
-    """.syntax.getBytes
+    format(
+      q"""
+        package ${Term.Name(pkg.mkString("."))} {
+          ..${imports :+ cls :+ obj}
+        }
+      """.syntax
+    )
+    .toEither.map(_.getBytes)
 }
 

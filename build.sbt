@@ -57,6 +57,7 @@ lazy val `lambda-swaggy` =
           // Project dependencies:
           "org.scalameta" %% "scalameta" % "3.7.4",
           "io.swagger.parser.v3" % "swagger-parser" % "2.0.1",
+          "com.geirsson" % "scalafmt-core_2.12" % "1.6.0-RC3",
           "org.typelevel" %% "cats-effect"          % catsEffectVersion,
 
           // Test dependencies:
