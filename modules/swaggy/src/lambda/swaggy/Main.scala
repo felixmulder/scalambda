@@ -11,7 +11,11 @@ object Main extends IOApp {
       parsed  <- IO.fromEither(parseArgs(args))
       swagger <- readSwagger(parsed.inputPath)
       defs    <- IO(definitions(swagger, parsed.pkg :+ "model"))
-      _       <- IO(paths(swagger, parsed.pkg :+ "paths"))
+      paths   <- IO {
+                  paths(swagger, parsed.pkg :+ "paths")
+                    .valueOr(e => throw new Exception(e.toList.mkString("\n")))
+                 }
+      _       <- paths.map(p => IO(println(p))).sequence
       _       <- writeScalaFiles(parsed.outputDir, defs)
     } yield ExitCode.Success
 
