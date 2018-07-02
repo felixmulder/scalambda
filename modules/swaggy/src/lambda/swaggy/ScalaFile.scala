@@ -60,16 +60,16 @@ object ScalaFile {
   private def endpointMethods(e: Endpoint): List[Defn.Def] =
     e.handlers.map {
       case h: Post =>
-        q"def ${h.name.term}(request: Request[${h.body}]): IO[Json] = ???"
+        q"def ${h.name.term}(request: Request[${h.body}]): IO[Response[Json]] = ???"
 
       case h: Put =>
-        q"def ${h.name.term}(request: Request[${h.body}]): IO[Json] = ???"
+        q"def ${h.name.term}(request: Request[${h.body}]): IO[Response[Json]] = ???"
 
       case h: Patch =>
-        q"def ${h.name.term}(request: Request[${h.body}]): IO[Json] = ???"
+        q"def ${h.name.term}(request: Request[${h.body}]): IO[Response[Json]] = ???"
 
       case h =>
-        q"def ${h.name.term}(request: Request[EmptyBody]): IO[Json] = ???"
+        q"def ${h.name.term}(request: Request[EmptyBody]): IO[Response[Json]] = ???"
 
       //case h: Head =>
       //  ??? // could be implemented in terms of the GET, mapping away the body
@@ -84,7 +84,7 @@ object ScalaFile {
     List(
       q"import cats.effect.IO",
       q"import io.circe.Json",
-      q"import lambda.{EmptyBody, Request}",
+      q"import lambda.{EmptyBody, Request, Response}",
       q"import $pkg._",
     )
   }
@@ -123,7 +123,7 @@ object ScalaFile {
       q"import cats.effect.IO",
       q"import io.circe.Json",
       q"import io.circe.syntax._",
-      q"import lambda.{EmptyBody, Lambda, Request}",
+      q"import lambda.{EmptyBody, Lambda, Request, Response}",
       q"import $endpoints._",
     ) ++ models
   }
@@ -142,8 +142,8 @@ object ScalaFile {
     }
 
     q"""
-      class ${h.title.tpe} extends Lambda[IO, Request[$tpe], Json] {
-        override def process(request: Request[$tpe]): IO[Json] =
+      class ${h.title.tpe} extends Lambda[IO, Request[$tpe], Response[Json]] {
+        override def process(request: Request[$tpe]): IO[Response[Json]] =
           ${s"${h.title}.${h.handler.name}".term}(request)
       }
     """ :: Nil
