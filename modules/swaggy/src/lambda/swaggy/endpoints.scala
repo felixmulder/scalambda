@@ -8,10 +8,11 @@ import scala.meta._
 import cats.implicits._
 import cats.data.{Validated, NonEmptyList => NEL}
 
+import metasyntax._
 import converters._
 import error._
 
-object paths {
+object endpoints {
 
   def apply(swagger: Swagger, pkg: NEL[String]): ErrorsOr[List[Endpoint]] = {
     def addEndpoint(map: Map[String, ErrorsOr[Endpoint]], ptup: (String, Path)) = {
@@ -30,7 +31,7 @@ object paths {
       .values.toList.sequence
   }
 
-  private[swaggy] def getOps(path: Path, pathString: String): ErrorsOr[List[Handler]] =
+  private[swaggy] def getOps(path: Path, pathString: String): ErrorsOr[List[MethodHandler]] =
     path
       .getOperationMap.asScala
       .map { case (method, op) =>
@@ -38,7 +39,7 @@ object paths {
         val body   = bodyParam(op)
         val params = queryParams(op)
 
-        def orMissing[A](f: Type.Name => A): ErrorsOr[A] =
+        def orMissing[A](f: Type => A): ErrorsOr[A] =
           Validated.fromOption(body.map(f), NEL.of(MissingBody(pathString, method)))
 
         method match {
@@ -65,14 +66,14 @@ object paths {
       case q: QueryParameter =>
         val tpe =
           if (q.getType == "array")
-            Type.Name(s"Array[${propertyToType(q.getItems)}]")
+            Type.Apply("List".tpe, propertyToType(q.getItems) :: Nil)
           else
             typeToType(q.getType, Option(q.getFormat))
         (Term.Name(q.getName), tpe)
     }
     .toMap
 
-  private[swaggy] def bodyParam(op: Operation): Option[Type.Name] =
+  private[swaggy] def bodyParam(op: Operation): Option[Type] =
     op.getParameters.asScala.collectFirst {
       case p: BodyParameter =>
         p.getSchema match {
@@ -80,7 +81,7 @@ object paths {
             Type.Name(r.getReference.split("/").last)
 
           case r: ArrayModel =>
-            Type.Name(s"Array[${propertyToType(r.getItems)}]")
+            Type.Apply("List".tpe, propertyToType(r.getItems) :: Nil)
         }
     }
 

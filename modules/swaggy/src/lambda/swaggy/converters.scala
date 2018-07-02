@@ -2,6 +2,7 @@ package lambda.swaggy
 
 import scala.meta.Type
 import io.swagger.models.properties._
+import metasyntax._
 
 /** A bunch of shared converters for generating scala definitions from the
  *  swagger-core library
@@ -10,7 +11,7 @@ object converters {
 
   /** Convert a Swagger Property into a scala.meta.Type */
   def propertyToType(prop: Property): Type = prop match {
-    case p: ArrayProperty => Type.Name(s"Array[${propertyToType(p.getItems)}]")
+    case p: ArrayProperty => Type.Apply("List".tpe, propertyToType(p.getItems) :: Nil)
     case _: BooleanProperty => boolean
     case _: DoubleProperty => double
     case p: DateProperty if p.getType == "string" => localDate

@@ -13,9 +13,10 @@ object Main extends IOApp {
       parsed  <- IO.fromEither(parseArgs(args))
       swagger <- readSwagger(parsed.inputPath)
       defs    <- IO(definitions(swagger, parsed.pkg ++ List("models")))
-      paths   <- paths(swagger, parsed.pkg ++ List("handlers"))
+      ends    <- endpoints(swagger, parsed.pkg ++ List("endpoints"))
                    .fold(e => IO.raiseError(MultipleErrors(e)), IO.pure(_))
-      _       <- writeScalaFiles(parsed.outputDir, defs ++ paths)
+      hands   <- IO(handlers(ends, parsed.pkg ++ List("handlers")))
+      _       <- writeScalaFiles(parsed.outputDir, defs ++ ends ++ hands)
     } yield ExitCode.Success
 
   private final case class ParsedArgs(

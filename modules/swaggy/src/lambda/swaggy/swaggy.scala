@@ -10,6 +10,6 @@ package object swaggy {
   type ErrorOr[A] = Validated[SwaggyError, A]
   type ErrorsOr[A] = ValidatedNel[SwaggyError, A]
 
-  val EmptyBody: Type = Type.Name("EmptyBody")
+  val EmptyBody: Type.Name = Type.Name("EmptyBody")
 
 }
