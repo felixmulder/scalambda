@@ -74,6 +74,7 @@ lazy val `lambda-swaggy` =
 lazy val `lambda-generated` =
   project
     .in(file("./modules/generated"))
+    .dependsOn(`lambda-core`)
     .settings(
       projectLayout ++
       compilerOptions ++

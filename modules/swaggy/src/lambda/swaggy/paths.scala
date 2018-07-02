@@ -13,7 +13,7 @@ import error._
 
 object paths {
 
-  def apply(swagger: Swagger, pkg: List[String]): ErrorsOr[List[Endpoint]] = {
+  def apply(swagger: Swagger, pkg: NEL[String]): ErrorsOr[List[Endpoint]] = {
     def addEndpoint(map: Map[String, ErrorsOr[Endpoint]], ptup: (String, Path)) = {
       val (pathString, path) = ptup
       val name = endpointName(pathString)

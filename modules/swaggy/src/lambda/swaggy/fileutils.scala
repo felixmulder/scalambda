@@ -13,8 +13,8 @@ import scala.meta._
 object fileutils {
 
   def writeScalaFile(outputDir: String, file: ScalaFile): IO[Unit] =
-    IO.fromEither(file.contents).flatMap { contents =>
-      writeFile((outputDir :: file.pkg).mkString("/"), file.title, contents)
+    IO.fromEither(ScalaFile.contents(file)).flatMap { contents =>
+      writeFile((outputDir :: file.pkg).toList.mkString("/"), file.title + ".scala", contents)
     }
 
   def writeScalaFiles(outputDir: String, files: List[ScalaFile]): IO[Unit] =

@@ -4,8 +4,9 @@ import java.util.UUID
 import java.time.Instant
 import java.time.format.DateTimeFormatter
 
+import cats.implicits._
 import io.circe.syntax._
-import io.circe.Decoder
+import io.circe.{Decoder, Json}
 import io.circe.parser.decode
 import io.circe.generic.semiauto.deriveDecoder
 import io.circe.generic.extras.semiauto.deriveUnwrappedDecoder
@@ -72,7 +73,17 @@ object Identity {
   implicit val decoder: Decoder[Identity] = deriveDecoder
 }
 
-case class Request[A](
+final case class EmptyBody()
+
+object EmptyBody {
+  implicit val decoder: Decoder[EmptyBody] =
+    Decoder[Json].emap { json =>
+      if (json.isNull) EmptyBody().asRight
+      else s"Body was not empty: $json".asLeft
+    }
+}
+
+final case class Request[A](
   resource: String,
   path: String,
   httpMethod: Method,
@@ -90,4 +101,6 @@ object Request {
     deriveDecoder[Request[String]].emap { req =>
       decode[A](req.body).map(body => req.copy(body = body)).left.map(_.getMessage)
     }
+
+
 }
