@@ -44,10 +44,10 @@ object ScalaFile {
     pkg(e.pkg, handlerStats(e))
 
   private def handlerStats(e: Endpoint): List[Stat] =
-    handlerImports(e.pkg) ++ handlerClass(e)
+    handlerImports(e.pkg) ++ handlerObject(e)
 
-  private def handlerClass(e: Endpoint): List[Defn.Class] =
-    q"class ${e.title.tpe} { ..${handlerMethods(e)} }" :: Nil
+  private def handlerObject(e: Endpoint): List[Defn.Object] =
+    q"object ${e.title.term} { ..${handlerMethods(e)} }" :: Nil
 
   private def handlerMethods(e: Endpoint): List[Defn.Def] =
     e.handlers.map {
