@@ -51,17 +51,20 @@ lazy val `lambda-swaggy` =
       libraryDependencies ++= {
         val catsEffectVersion    = "1.0.0-RC2"
         val minitestVersion      = "2.1.1"
+        val scalafmtVersion      = "1.6.0-RC3"
+        val swaggerParserVersion = "2.0.1"
+        val scalaMetaVersion     = "4.0.0-M4"
 
 
         Seq(
           // Project dependencies:
-          "org.scalameta" %% "scalameta" % "3.7.4",
-          "io.swagger.parser.v3" % "swagger-parser" % "2.0.1",
-          "com.geirsson" % "scalafmt-core_2.12" % "1.6.0-RC3",
-          "org.typelevel" %% "cats-effect"          % catsEffectVersion,
+          "org.scalameta"        %% "scalameta"      % scalaMetaVersion,
+          "io.swagger.parser.v3" %  "swagger-parser" % swaggerParserVersion,
+          "com.geirsson"         %% "scalafmt-core"  % scalafmtVersion,
+          "org.typelevel"        %% "cats-effect"    % catsEffectVersion,
 
           // Test dependencies:
-          "io.monix" %% "minitest" % minitestVersion % "test",
+          "io.monix"             %% "minitest"       % minitestVersion % "test",
         )
       },
       // Enable minitest:
@@ -92,7 +95,7 @@ lazy val `lambda-generated` =
           "io.circe"      %% "circe-generic"        % circeVersion,
           "io.circe"      %% "circe-generic-extras" % circeVersion,
           "io.circe"      %% "circe-java8"          % circeVersion,
-          "com.amazonaws" % "aws-lambda-java-core"  % awsLambdaCoreVersion,
+          "com.amazonaws" %  "aws-lambda-java-core" % awsLambdaCoreVersion,
         )
       },
     )
