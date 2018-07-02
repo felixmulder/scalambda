@@ -26,4 +26,4 @@ Status
 - [ ] Generate comments
 - [ ] Preserve existing code on regen
 - [ ] Preserve existing comments on regen
-
+- [ ] Support AWS extensions and generate deployment infra
