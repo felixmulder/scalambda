@@ -13,43 +13,15 @@ import error._
 
 object paths {
 
-  final case class Endpoint(name: String, path: String, operations: List[Handler])
-
-  sealed trait Handler {
-    def name: String
-    def path: String
-  }
-
-  final case class Get(name: String, path: String, queryParams: Map[Term, Type])
-    extends Handler
-
-  final case class Head(name: String, path: String, queryParams: Map[Term, Type])
-    extends Handler
-
-  final case class Post(name: String, path: String, body: Type)
-    extends Handler
-
-  final case class Put(name: String, path: String, body: Type)
-    extends Handler
-
-  final case class Delete(name: String, path: String)
-    extends Handler
-
-  final case class Options(name: String, path: String)
-    extends Handler
-
-  final case class Patch(name: String, path: String, body: Type)
-    extends Handler
-
   def apply(swagger: Swagger, pkg: List[String]): ErrorsOr[List[Endpoint]] = {
     def addEndpoint(map: Map[String, ErrorsOr[Endpoint]], ptup: (String, Path)) = {
       val (pathString, path) = ptup
       val name = endpointName(pathString)
       val ops  = getOps(path, pathString)
-      val endpoint = map.getOrElse(name, Endpoint(name, pathString, Nil).valid)
+      val endpoint = map.getOrElse(name, Endpoint(name, pathString, pkg, Nil).valid)
       map + (name -> endpoint.andThen { e =>
         ops.map { ops =>
-          e.copy(operations = e.operations ++ ops)
+          e.copy(handlers = e.handlers ++ ops)
         }
       })
     }
@@ -121,5 +93,5 @@ object paths {
       .split("/")
       .filter(_.nonEmpty)
       .filterNot(_.head == '{')
-      .map(_.capitalize).mkString("", "", ".scala")
+      .map(_.capitalize).mkString
 }

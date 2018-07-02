@@ -16,6 +16,7 @@ object Main extends IOApp {
                     .valueOr(e => throw new Exception(e.toList.mkString("\n")))
                  }
       _       <- paths.map(p => IO(println(p))).sequence
+      _       <- IO(paths.map(p => new String(p.contents.valueOr(throw _))).foreach(println))
       _       <- writeScalaFiles(parsed.outputDir, defs)
     } yield ExitCode.Success
 
