@@ -9,7 +9,7 @@ import scala.meta.contrib._
 import cats.implicits._
 import cats.data.{Validated, NonEmptyList => NEL}
 
-import metasyntax._
+import syntax._
 import converters._
 import error._
 

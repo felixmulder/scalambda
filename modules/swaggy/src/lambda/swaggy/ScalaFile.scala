@@ -3,7 +3,7 @@ package lambda.swaggy
 import scala.meta._
 import cats.data.NonEmptyList
 
-import metasyntax._
+import syntax._
 
 sealed trait ScalaFile {
   def pkg: NonEmptyList[String]
