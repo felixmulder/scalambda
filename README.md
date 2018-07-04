@@ -24,6 +24,6 @@ Status
 - [x] Generate API-stubbs from Swagger
 - [ ] Integrate with SBT by way of plugin
 - [ ] Generate comments
-- [ ] Preserve existing code on regen
+- [x] Preserve existing code on regen
 - [ ] Preserve existing comments on regen
 - [ ] Support AWS extensions and generate deployment infra
