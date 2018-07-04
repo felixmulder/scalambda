@@ -59,6 +59,7 @@ lazy val `lambda-swaggy` =
         Seq(
           // Project dependencies:
           "org.scalameta"        %% "scalameta"      % scalaMetaVersion,
+          "org.scalameta"        %% "contrib"        % scalaMetaVersion,
           "io.swagger.parser.v3" %  "swagger-parser" % swaggerParserVersion,
           "com.geirsson"         %% "scalafmt-core"  % scalafmtVersion,
           "org.typelevel"        %% "cats-effect"    % catsEffectVersion,
