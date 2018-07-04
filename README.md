@@ -22,8 +22,8 @@ Status
 ======
 - [x] Pure functional API for AWS Lambda
 - [x] Generate API-stubbs from Swagger
+- [x] Preserve existing code on regen
 - [ ] Integrate with SBT by way of plugin
 - [ ] Generate comments
-- [x] Preserve existing code on regen
 - [ ] Preserve existing comments on regen
 - [ ] Support AWS extensions and generate deployment infra
