@@ -2,7 +2,8 @@ package lambda.swaggy
 
 import scala.meta.Type
 import io.swagger.models.properties._
-import metasyntax._
+
+import syntax._
 
 /** A bunch of shared converters for generating scala definitions from the
  *  swagger-core library
