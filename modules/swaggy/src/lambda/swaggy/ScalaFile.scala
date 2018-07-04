@@ -1,6 +1,5 @@
 package lambda.swaggy
 
-import org.scalafmt.Scalafmt.format
 import scala.meta._
 import cats.data.NonEmptyList
 
@@ -27,28 +26,26 @@ final case class Endpoint(
 
 final case class JsonHandler(
   title: String,
+  handlerTitle: String,
   pkg: NonEmptyList[String],
   handler: MethodHandler
 ) extends ScalaFile
 
 object ScalaFile {
-  def contents(f: ScalaFile): Either[Throwable, Array[Byte]] =
-    format {
-      f match {
-        case f: RequestType =>
-          pkg(f.pkg, f.imports :+ f.cls :+ f.obj)
-        case f: Endpoint =>
-          endpoint(f)
-        case f: JsonHandler =>
-          jsonHandler(f)
-      }
+  def toTree(f: ScalaFile): Tree =
+    f match {
+      case f: RequestType =>
+        pkg(f.pkg, f.imports :+ f.cls :+ f.obj)
+      case f: Endpoint =>
+        endpoint(f)
+      case f: JsonHandler =>
+        jsonHandler(f)
     }
-    .toEither.map(_.getBytes)
 
-  private def pkg(name: NonEmptyList[String], stats: List[Stat]): String =
-    q"package ${name.toList.mkString(".").term} { ..$stats }".syntax
+  private def pkg(name: NonEmptyList[String], stats: List[Stat]): Tree =
+    q"package ${name.toList.mkString(".").term} { ..$stats }"
 
-  private def endpoint(e: Endpoint): String =
+  private def endpoint(e: Endpoint): Tree =
     pkg(e.pkg, endpointStats(e))
 
   private def endpointStats(e: Endpoint): List[Stat] =
@@ -58,7 +55,10 @@ object ScalaFile {
     q"object ${e.title.term} { ..${endpointMethods(e)} }" :: Nil
 
   private def endpointMethods(e: Endpoint): List[Defn.Def] =
-    e.handlers.map {
+    e.handlers.map(endpointMethod)
+
+  private[swaggy] def endpointMethod(m: MethodHandler): Defn.Def =
+    m match {
       case h: Post =>
         q"def ${h.name.term}(request: Request[${h.body}]): IO[Response[Json]] = ???"
 
@@ -101,7 +101,7 @@ object ScalaFile {
     else inner(path, pkg)
   }
 
-  private def jsonHandler(h: JsonHandler): String =
+  private def jsonHandler(h: JsonHandler): Tree =
     pkg(h.pkg, jsonHandlerStats(h))
 
   private def jsonHandlerStats(h: JsonHandler): List[Stat] =
@@ -144,7 +144,7 @@ object ScalaFile {
     q"""
       class ${h.title.tpe} extends Lambda[IO, Request[$tpe], Response[Json]] {
         override def process(request: Request[$tpe]): IO[Response[Json]] =
-          ${s"${h.title}.${h.handler.name}".term}(request)
+          ${s"${h.handlerTitle}.${h.handler.name}".term}(request)
       }
     """ :: Nil
   }
