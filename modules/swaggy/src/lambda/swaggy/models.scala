@@ -8,7 +8,7 @@ import cats.data.NonEmptyList
 
 import converters._
 
-object definitions {
+object models {
 
   /** Creates case class definitions for requests and responses from the
    *  swagger-core parsed definition

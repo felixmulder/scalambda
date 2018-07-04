@@ -13,12 +13,12 @@ object Main extends IOApp {
     for {
       parsed   <- IO.fromEither(parseArgs(args))
       swagger  <- readSwagger(parsed.inputPath)
-      defs     <- IO(definitions(swagger, parsed.pkg ++ List("models")))
+      models   <- IO(models(swagger, parsed.pkg ++ List("models")))
       newEnds  <- endpoints(swagger, parsed.pkg ++ List("endpoints")).orRaiseMultiple[IO]
       hands    <- IO(handlers(newEnds, parsed.pkg ++ List("handlers")))
       existing <- readExisting(parsed.outputDir, newEnds.toList)
       ends     <- endpoints.adaptExisting(existing).orRaiseMultiple[IO]
-      _        <- writeScalaFiles(parsed.outputDir, defs ++ hands)
+      _        <- writeScalaFiles(parsed.outputDir, models ++ hands)
       _        <- writeTrees(parsed.outputDir, ends)
     } yield ExitCode.Success
 
